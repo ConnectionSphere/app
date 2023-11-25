@@ -741,6 +741,7 @@ else
             # receives: array of IDs of eml_address objects
             # return: hash with the daily_quota-delivered + last_delivery_minutes_ago, of each address.
             def self.daily_left_for_delivery(ids)
+                return {} if ids.size == 0
                 q = "
                     select 
                         a.id, --a.address, a.max_deliveries_per_day, 
