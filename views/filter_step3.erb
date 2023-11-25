@@ -4388,6 +4388,9 @@ begin
   email = @login.user.preference('step3.email', '', nil)
   passw = @login.user.preference('step3.passw', '', nil)
 
+  # convert body to html, replacing \n by <br/>
+  body = body.gsub(/\n/, '<br/>')
+
   # create address
   mta = BlackStack::Emails::Mta.new({
     :id_user => @login.user.id,
