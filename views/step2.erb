@@ -1,20 +1,20 @@
 <%
 default_subject = "Get in touch... "
-default_body = "Hello !fname,
-
-I'm #{@login.user.name} from #{@login.user.account.name}.
-I am not sure if you remember me.
-
-I am writing to you because I am looking for some beta-testers.
-
-I am rolling out a new service and I would like you try it, share your feedback, and help me improve it.
-
-Interested?
-
-I await for you response.
-
-Best regards,
-#{@login.user.name}.
+default_body = "Hello {first-name},\n\r
+\n\r
+I'm #{@login.user.name} from #{@login.user.account.name}.\n\r
+I am not sure if you remember me.\n\r
+\n\r
+I am writing to you because I am looking for some beta-testers.\n\r
+\n\r
+I am rolling out a new service and I would like you try it, share your feedback, and help me improve it.\n\r
+\n\r
+Interested?\n\r
+\n\r
+I await for you response.\n\r
+\n\r
+Best regards,\n\r
+#{@login.user.name}.\n\r
 "
 
 subject = @login.user.preference('step2.subject', default_subject, nil)
