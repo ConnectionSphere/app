@@ -1,11 +1,19 @@
 <%
-#begin
+begin
   # store parameters in preferences
   fname = @login.user.preference('step3.fname', '', params[:fname])
   lname = @login.user.preference('step3.lname', '', params[:lname])
   email = @login.user.preference('step3.email', '', params[:email])
   passw = @login.user.preference('step3.passw', '', params[:passw])
-  
+
+  # validate the address is belonging this account
+  address = BlackStack::Emails::Address.where(:address => email).first
+  if address
+    if !@login.user.account.users.map { |u| u.id }.include?(address.id_user)
+      redirect "/step3?err="+ CGI::escape('Address already registered in another account.')
+    end
+  end
+
   # parsing csv
   csv = @login.user.preference('step1.csv', '', nil)
   rows = csv.split("\n").map { |row| 
@@ -54,18 +62,20 @@
     :search_all_wildcard => '*',
   })
   mta.save
-
-  address = BlackStack::Emails::Address.new({
-    :id_user => @login.user.id,
-    :id_mta => mta.id,
-    :type => BlackStack::Emails::Address::TYPE_GMAIL,
-    :first_name => fname,
-    :last_name => lname,
-    :address => email,
-    :password => passw,
-    :enabled => true,
-  })
-  address.save
+  
+  if address.nil?
+    address = BlackStack::Emails::Address.new({
+      :id_user => @login.user.id,
+      :id_mta => mta.id,
+      :type => BlackStack::Emails::Address::TYPE_GMAIL,
+      :first_name => fname,
+      :last_name => lname,
+      :address => email,
+      :password => passw,
+      :enabled => true,
+    })
+    address.save
+  end
 
   # create tag
   tag = BlackStack::Emails::Tag.new
@@ -173,7 +183,7 @@
   url = '/dashboard' #BlackStack::Funnel.url_after_login(@login, 'funnels.main')
   # go to done wizard
   redirect url
-#rescue => e
-#  redirect "/step3?err="+ CGI::escape(e.message)
-#end
+rescue => e
+  redirect "/step3?err="+ CGI::escape(e.message)
+end
 %>
