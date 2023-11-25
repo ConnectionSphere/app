@@ -120,14 +120,15 @@ span.wizard-error {
 		let b = true; // errors found
 		let err = ''; // error message
 		let csv = ''; // csv string
-
+console.log('b1='+b.toString());
 		// validate there are <%=min_rows%> rows as minimum
 		if (n <= <%=min_rows%>) { 
 			b=false; 
 			err += 'You must add at least <%=min_rows%> leads.';
 		}
-
+	console.log('b2='+b.toString());
 		while (r<n) {
+console.log('r='+r.toString());
 			// get value
 			email = tablesJs.get_value(ctx, r, 0);
 			fname = tablesJs.get_value(ctx, r, 1);
@@ -137,6 +138,7 @@ span.wizard-error {
 			$('#csv').val(csv);
 
 			// if email is not empty, validate it
+console.log(email);
 			if (email.length > 0) { 
 				if (!validEmail(email)) { 
 					b = false; 
@@ -149,7 +151,7 @@ span.wizard-error {
 				// if field is empty, and it is not the last row, show error
 				if (r < n-1) { b = false; }
 			}
-
+console.log('b3='+b.toString());
 			// if fname is not empty, validate it
 			if (fname.length > 0) {
 				if (!validName(fname)) { 
@@ -163,7 +165,7 @@ span.wizard-error {
 				// if field is empty, and it is not the last row, show error
 				if (r < n-1) { b = false; }
 			}
-
+console.log('b4='+b.toString());
 			// if lname is not empty, validate it
 			if (lname.length > 0) {
 				if (!validName(lname)) { 
@@ -177,7 +179,7 @@ span.wizard-error {
 				// if field is empty, and it is not the last row, show error
 				if (r < n-1) { b = false; }
 			}
-
+console.log('b5='+b.toString());
 			// if it is the last row, and all fields have a value, then add a field
 			if (r == n-1) { 
 				if (email.length>0 && fname.length>0 && lname.length>0) {
@@ -186,21 +188,21 @@ span.wizard-error {
 			}
 			r++;
 		}
-
+console.log('b6='+b.toString());
 		// show error message
 		if (err.length > 0) { 
 			$('#err').text(err); 
 		} else {
 			$('#err').text(''); 
 		}
-
+console.log('b7='+b.toString());
 		// enable/disable next button
 		if (b) {
 			$('#step1-next').removeAttr('disabled');
 		} else {
 			$('#step1-next').attr('disabled', 'disabled');
 		}
-
+console.log('a')
 		// return result
 		return b;
 	}
