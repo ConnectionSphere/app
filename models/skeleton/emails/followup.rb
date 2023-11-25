@@ -212,46 +212,49 @@ module BlackStack
             end
 
             def self.ids_for_stats_update
+                ids = DB["
+                    -- campaigns with new deliveries (sents, responses, bounces)
+                    select f.id_campaign
+                    from eml_followup f
+                    join eml_delivery d on f.id=d.id_followup
+                    where f.delete_time is null 
+                    and d.create_time > coalesce(f.timeline_end_time, '2000-01-01')
+                    group by f.id
+                    union
+                    -- campaigns with new opens
+                    select f.id_campaign
+                    from eml_followup f
+                    join eml_delivery d on f.id=d.id_followup
+                    join eml_open o on d.id=o.id_delivery 
+                    where f.delete_time is null 
+                    and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
+                    group by f.id
+                    union
+                    -- campaigns with new clicks
+                    select f.id_campaign
+                    from eml_followup f
+                    join eml_delivery d on f.id=d.id_followup
+                    join eml_click o on d.id=o.id_delivery 
+                    where f.delete_time is null 
+                    and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
+                    group by f.id
+                    union
+                    -- campaigns with new unsubscribes
+                    select f.id_campaign
+                    from eml_followup f
+                    join eml_delivery d on f.id=d.id_followup
+                    join eml_unsubscribe o on d.id=o.id_delivery 
+                    where f.delete_time is null 
+                    and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
+                    group by f.id                
+                "].all.map { |row| row[:id_campaign] }
+
+                return [] if ids.size == 0
+
                 DB["
-                    -- followups beloging...
                     select f.id
                     from eml_followup f
-                    where f.id_campaign in (
-                        -- campaigns with new deliveries (sents, responses, bounces)
-                        select f.id_campaign
-                        from eml_followup f
-                        join eml_delivery d on f.id=d.id_followup
-                        where f.delete_time is null 
-                        and d.create_time > coalesce(f.timeline_end_time, '2000-01-01')
-                        group by f.id
-                        union
-                        -- campaigns with new opens
-                        select f.id_campaign
-                        from eml_followup f
-                        join eml_delivery d on f.id=d.id_followup
-                        join eml_open o on d.id=o.id_delivery 
-                        where f.delete_time is null 
-                        and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
-                        group by f.id
-                        union
-                        -- campaigns with new clicks
-                        select f.id_campaign
-                        from eml_followup f
-                        join eml_delivery d on f.id=d.id_followup
-                        join eml_click o on d.id=o.id_delivery 
-                        where f.delete_time is null 
-                        and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
-                        group by f.id
-                        union
-                        -- campaigns with new unsubscribes
-                        select f.id_campaign
-                        from eml_followup f
-                        join eml_delivery d on f.id=d.id_followup
-                        join eml_unsubscribe o on d.id=o.id_delivery 
-                        where f.delete_time is null 
-                        and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
-                        group by f.id                
-                    )
+                    where f.id_campaign in ('#{ids.join("','")}')
                 "].all.map { |row| row[:id] }
             end
 
