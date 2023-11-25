@@ -252,7 +252,7 @@ module BlackStack
                         and o.create_time > coalesce(f.timeline_end_time, '2000-01-01')
                         group by f.id                
                     )
-                "].map(:id)
+                "].all.map { |row| row[:id] }
             end
 
             def update_stats
