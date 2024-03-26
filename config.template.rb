@@ -185,7 +185,7 @@ BlackStack::Deployer::add_nodes([{
     :ssh_username => 'ubuntu',
     :ssh_port => 22,
     #:ssh_password => ssh_password,
-    :ssh_private_key_file => BlackStack.sandbox? ? '/home/leandro/code/app/cli/cs.pem' : '$HOME/code/app/cli/cs.pem',
+    :ssh_private_key_file => BlackStack.sandbox? ? '/home/leandro/code/connectionsphere/cli/cs.pem' : '$HOME/code/connectionsphere/cli/cs.pem',
     # git
     :git_branch => 'main',
     :git_username => 'leandrosardi',
@@ -197,7 +197,7 @@ BlackStack::Deployer::add_nodes([{
     # sinatra
     :web_port => 3000,
     # config.rb content - always using dev-environment here
-    :config_rb_content => File.read(BlackStack.sandbox? ? '/home/leandro/code/app/config.rb' : '$HOME/code/app/config.rb'),
+    :config_rb_content => File.read(BlackStack.sandbox? ? '/home/leandro/code/connectionsphere/config.rb' : '$HOME/code/connectionsphere/config.rb'),
     # default deployment routine for this node
     :deployment_routine => 'deploy-my.saas',
     # setup stand-alone processes
@@ -207,12 +207,12 @@ BlackStack::Deployer::add_nodes([{
         :procs => [
             {
                 :name => 'leads.export',
-                :logfile => '$HOME/code/app/export.log',
+                :logfile => '$HOME/code/connectionsphere/export.log',
                 :params => [
                     { :name=>'foo', :value=>'bar' },
                     { :name=>'foo2', :value=>'bar2'},
                 ],
-                #:command => 'cd ~ & nohup ruby ~/code/app/extensions/leads/p/export.rb >/dev/null 2>&1 &',
+                #:command => 'cd ~ & nohup ruby ~/code/connectionsphere/extensions/leads/p/export.rb >/dev/null 2>&1 &',
                 :min_cycle_seconds => 60,
                 :processing_function => Proc.new do |*args|
                     # TODO: Code Me!
