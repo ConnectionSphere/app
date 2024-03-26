@@ -10,12 +10,12 @@
 # This script is to keep the table `eml_timeline` updated.
 
 # load gem and connect database
-require 'app/mysaas'
-require 'app/lib/stubs'
-require 'app/config'
-require 'app/version'
+require 'mysaas'
+require 'lib/stubs'
+require 'config'
+require 'version'
 DB = BlackStack::CRDB::connect
-require 'app/lib/skeletons'
+require 'lib/skeletons'
 
 l = BlackStack::LocalLogger.new('./timeline.log')
 

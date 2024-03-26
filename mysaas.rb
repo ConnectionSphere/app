@@ -31,11 +31,11 @@ require 'fileutils'
 require 'rack/contrib/try_static' # this is to manage many public folders
 require 'postmark'
 
-require 'app/lib/controllers'
-require 'app/lib/emails'
-require 'app/lib/extensions'
-require 'app/lib/notifications'
-require 'app/lib/tablehelper'
+require 'lib/controllers'
+require 'lib/emails'
+require 'lib/extensions'
+require 'lib/notifications'
+require 'lib/tablehelper'
 
 # Default login and signup screens.
 # 

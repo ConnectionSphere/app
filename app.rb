@@ -1,8 +1,8 @@
 begin
   print 'Loading libraries... '
   require 'sinatra'
-  require 'app/mysaas'
-  require 'app/lib/stubs'
+  require 'mysaas'
+  require 'lib/stubs'
   puts 'done'.green
 
   # 
@@ -20,7 +20,7 @@ begin
       :mandatory=>false, 
       :description=>'Name of the configuration file.', 
       :type=>BlackStack::SimpleCommandLineParser::STRING,
-      :default => 'app/config',
+      :default => 'config',
     }]
   )
   puts 'done'.green
@@ -31,7 +31,7 @@ begin
   puts 'done'.green
 
   print 'Loading version information... '
-  require 'app/version'
+  require 'version'
   puts 'done'.green
 
   print 'Connecting database... '
@@ -39,7 +39,7 @@ begin
   puts 'done'.green
 
   print 'Loading models... '
-  require 'app/lib/skeletons'
+  require 'lib/skeletons'
   puts 'done'.green
 
   print 'Loading helpers... '
@@ -172,14 +172,14 @@ begin
   # include the libraries of the extensions
   # reference: https://github.com/leandrosardi/mysaas/issues/33
   BlackStack::Extensions.extensions.each { |e|
-    require "app/extensions/#{e.name.downcase}/main"
+    require "extensions/#{e.name.downcase}/main"
   }
   puts 'done'.green
 
   print 'Loading extensions models... '
   # Load skeleton classes
   BlackStack::Extensions.extensions.each { |e|
-    require "app/extensions/#{e.name.downcase}/lib/skeletons"
+    require "extensions/#{e.name.downcase}/lib/skeletons"
   }
   puts 'done'.green
   
@@ -914,6 +914,11 @@ begin
     erb :"views/emails/report", :layout => :"/views/layouts/core"
   end
 
+  # unibox
+  get "/unibox", :auth => true, :agent => /(.*)/ do
+    erb :"views/emails/unibox", :layout => :"/views/layouts/core"
+  end
+
   # actions / rules / automations
   get "/emails/actions", :auth => true, :agent => /(.*)/ do
     erb :"views/emails/actions", :layout => :"/views/layouts/core"
@@ -1053,7 +1058,7 @@ begin
   # reference: https://github.com/leandrosardi/mysaas/issues/33
   print 'Setting up extensions entries... '
   BlackStack::Extensions.extensions.each { |e|
-    require "app/extensions/#{e.name.downcase}/app.rb"
+    require "extensions/#{e.name.downcase}/app.rb"
   }
   puts 'done'.green
   
